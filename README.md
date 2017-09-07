@@ -11,8 +11,7 @@ JDK动态代理+反射
 在环境变量中配置zk地址 JAVA_ZOOKEEPER_HOST
 
 ###### 时序图：
-```
-sequence
+```sequence
 browser->>projectB:http请求
 projectB->>projectA:tcp请求(channel.writeAndFlush(req))
 projectA->>projectB: 返回结果
