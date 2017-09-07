@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:c="http://www.springframework.org/schema/c"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:component-scan base-package="test.rpc.*"/>
+
+    <bean id="zkClient" class="com.rpc.zk.CustomZkClient"/>
+
+    <bean class="com.rpc.server.ServerBootstrap" init-method="init">
+        <property name="zkClient" ref="zkClient"/>
+        <property name="serviceUri" value="/biz/projectB/app"/>
+        <property name="port" value="40001"/>
+        <property name="proxyFactory" ref="proxyFactory"/>
+    </bean>
+
+    <bean class="com.rpc.server.Exporter" c:clazz="test.rpc.api.HelloB" c:interfaceImpl-ref="helloBImpl"/>
+
+    <bean id="proxyFactory" class="com.rpc.client.ServiceProxyFactory" init-method="init">
+        <property name="zkClient" ref="zkClient"/>
+        <constructor-arg index="0">
+            <list>
+                <bean class="com.rpc.client.Service">
+                    <property name="serviceUri" value="/biz/projectA/app"/>
+                    <property name="interfaceNames">
+                        <set>
+                            <value>test.rpc.api.HelloA</value>
+                        </set>
+                    </property>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean  id ="rpcA" factory-bean="proxyFactory" factory-method="getServiceProxy">
+        <constructor-arg index="0" value="test.rpc.api.HelloA"/>
+    </bean>
+
+    <bean id="helloBImpl" class="test.rpc.Impl.HelloBImpl">
+        <property name="helloA" ref="rpcA"/>
+    </bean>
+</beans>

@@ -9,11 +9,12 @@ import lombok.Data;
 public class Exporter
 {
 	private Class<?> clazz;
-	private Object Interface;
 
-	public Exporter(Class<?> clazz,Object Interface)
+	private Object interfaceImpl;
+
+	public Exporter(Class<?> clazz ,Object interfaceImpl)
 	{
 		this.clazz = clazz;
-		this.Interface = Interface;
+		this.interfaceImpl = interfaceImpl;
 	}
 }
