@@ -12,7 +12,7 @@ JDK动态代理+反射
 
 ###### 时序图：
 ```
-sequenceDiagram
+sequence
 browser->>projectB:http请求
 projectB->>projectA:tcp请求(channel.writeAndFlush(req))
 projectA->>projectB: 返回结果
